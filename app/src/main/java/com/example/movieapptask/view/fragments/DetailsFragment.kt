@@ -12,9 +12,7 @@ import com.example.movieapptask.R
 import com.example.movieapptask.databinding.FragmentDetailsBinding
 import com.example.movieapptask.model.network.APIClient
 import com.example.movieapptask.model.pojos.DataStatus.*
-import com.example.movieapptask.utils.fullScreenFragment
-import com.example.movieapptask.utils.handleCrewData
-import com.example.movieapptask.utils.handleDataStatus
+import com.example.movieapptask.utils.*
 import com.example.movieapptask.view.adapter.CastAdapter
 import com.example.movieapptask.viewmodel.MovieDetailsVM
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
@@ -27,18 +25,19 @@ class DetailsFragment : Fragment() {
     private val movieDetailsVM: MovieDetailsVM by lazy { ViewModelProvider(this).get(MovieDetailsVM::class.java) }
     private val args: DetailsFragmentArgs by navArgs()
     private val castAdapter: CastAdapter by lazy { CastAdapter() }
-    internal var zoomOut = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentDetailsBinding.inflate(inflater, container, false)
+
         val movieID = args.movieID
         movieDetailsVM.getMovieDetails(movieID)
         binding.rvCast.adapter = castAdapter
         lifecycle.addObserver(binding.youtubePlayerVideo)
-        fullScreenFragment()
+
+        hideImageWhenCollapse()
 
         movieDetailsVM.video.observe(viewLifecycleOwner, { video ->
             if (video.site == "YouTube") {
@@ -55,10 +54,18 @@ class DetailsFragment : Fragment() {
         movieDetailsVM.movie.observe(viewLifecycleOwner, { movie ->
             val crewData = movie.credits?.crew
             val castData = movie.credits?.cast
+
             Glide.with(binding.detailsImg)
                 .load(APIClient.BASE_IMG_URL + movie.imgPath)
                 .error(R.drawable.no_image)
                 .into(binding.detailsImg)
+
+            Glide.with(binding.imgBackground)
+                .load(APIClient.BASE_IMG_URL + movie.imgBG)
+                .error(R.drawable.no_image)
+                .into(binding.imgBackground)
+
+            movie.imgPath?.let { handleFullScreenFragment(it,movieID) }
             binding.movie = movie
 
             if (crewData != null && crewData.count() > 0) {

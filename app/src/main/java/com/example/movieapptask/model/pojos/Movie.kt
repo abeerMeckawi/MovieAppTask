@@ -4,7 +4,8 @@ import com.google.gson.annotations.SerializedName
 
 data class Movie(
     var adult: Boolean?=null,
-    var backdrop_path: String?=null,
+    @SerializedName("backdrop_path")
+    var imgBG: String?=null,
     var budget: Int?=null,
     var genres: List<Genre>?=null,
     var homepage: String?=null,

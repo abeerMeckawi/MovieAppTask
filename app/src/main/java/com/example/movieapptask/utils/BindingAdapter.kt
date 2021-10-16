@@ -11,10 +11,12 @@ import com.example.movieapptask.R
 @BindingAdapter(value = ["genre","duration","date"], requireAll = true)
 fun TextView.appendTextView(genre: String, duration: String, date: String) {
     val appendText = SpannableStringBuilder()
-        .color(getColor(context, R.color.black)) { append(genre) }
-        .color(getColor(context, R.color.black)) { append("| ") }
-        .color(getColor(context, R.color.black)) { append(duration) }
-        .color(getColor(context, R.color.black)) { append("| ") }
-        .color(getColor(context, R.color.black)) { append(date) }
+        .color(getColor(context, R.color.white)) { append(genre) }
+        .color(getColor(context, R.color.white)) { append("| ") }
+        .color(getColor(context, R.color.white)) { append(duration) }
+        .color(getColor(context, R.color.white)) { append("| ") }
+        .color(getColor(context, R.color.white)) { append(date) }
     this.text = appendText
 }
+
+

@@ -6,80 +6,99 @@
     <data>
 
         <import type="com.example.movieapptask.model.pojos.Movie" />
-        <import type="android.view.View"/>
-        <import type="com.example.movieapptask.utils.RuntimeUtils"/>
+
+        <import type="android.view.View" />
+
+        <import type="com.example.movieapptask.utils.RuntimeUtils" />
+
         <variable
             name="movie"
             type="Movie" />
     </data>
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/card"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/movieContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:elevation="5dp">
+        android:layout_margin="16dp"
+        android:padding="8dp"
+        android:paddingBottom="16dp">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/movieContainer"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingBottom="8dp">
+        <androidx.cardview.widget.CardView
+            android:id="@+id/imgMovieCardView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:layout_marginBottom="8dp"
+            android:elevation="50dp"
+            android:outlineSpotShadowColor="@color/white"
+            app:cardBackgroundColor="@color/black"
+            app:cardElevation="50dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
                 android:id="@+id/imgMovie"
-                android:layout_width="110dp"
-                android:layout_height="150dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="8dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
+                android:layout_width="120dp"
+                android:layout_height="170dp"
+                android:scaleType="centerCrop"
                 tools:srcCompat="@tools:sample/avatars" />
+        </androidx.cardview.widget.CardView>
 
-            <TextView
-                android:id="@+id/tvMovieName"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
-                android:text="@{movie.movieTitle}"
-                app:layout_constraintEnd_toStartOf="@+id/tvRate"
-                app:layout_constraintStart_toEndOf="@+id/imgMovie"
-                app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/tvSubTitle"
-                date="@{movie.date}"
-                duration="@{``+ RuntimeUtils.formatMinutes(movie.duration)}"
-                genre='@{movie.genres.size() > 0 ?``+movie.genres.get(0).genre:``}'
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/tvMovieName"
-                app:layout_constraintTop_toBottomOf="@+id/tvMovieName" />
+        <TextView
+            android:id="@+id/tvMovieName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
+            android:text="@{movie.movieTitle}"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@+id/tvRate"
+            app:layout_constraintStart_toEndOf="@+id/imgMovieCardView"
+            app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/tvRate"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="8dp"
-                android:text='@{movie.rate == 0 ? "NR":``+ movie.rate}'
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+        <TextView
+            android:id="@+id/tvSubTitle"
+            date="@{``+ RuntimeUtils.formatDateString(movie.date)}"
+            duration="@{``+ RuntimeUtils.formatMinutes(movie.duration)}"
+            genre='@{movie.genres.size() > 0 ?``+movie.genres.get(0).genre:``}'
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/tvMovieName"
+            app:layout_constraintTop_toBottomOf="@+id/tvMovieName" />
 
-            <TextView
-                android:id="@+id/tvAbout"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="8dp"
-                android:text="@{movie.about}"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/tvSubTitle"
-                app:layout_constraintTop_toBottomOf="@+id/tvSubTitle" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.cardview.widget.CardView>
+        <TextView
+            android:id="@+id/tvRate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="8dp"
+            android:text='@{movie.rate == 0 ? "NR":``+ RuntimeUtils.formatRate(``+movie.rate)}'
+            android:textColor="@color/white"
+            android:textSize="24sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tvAbout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="4dp"
+            android:text='@{``+ RuntimeUtils.formatAbout(movie.about)}'
+            android:textColor="@color/light_gray"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/tvSubTitle"
+            app:layout_constraintTop_toBottomOf="@+id/tvSubTitle" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

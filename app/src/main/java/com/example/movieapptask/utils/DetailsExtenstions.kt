@@ -1,23 +1,39 @@
 package com.example.movieapptask.utils
 
 import android.view.View
-import android.widget.ImageView
-import android.widget.LinearLayout
-import com.example.movieapptask.R
+import androidx.navigation.findNavController
 import com.example.movieapptask.model.pojos.Crew
 import com.example.movieapptask.model.pojos.HandleDataStatus
 import com.example.movieapptask.view.fragments.DetailsFragment
+import com.example.movieapptask.view.fragments.DetailsFragmentDirections
+import com.google.android.material.appbar.AppBarLayout.OnOffsetChangedListener
 import com.google.android.material.snackbar.Snackbar
+import kotlin.math.abs
 
 
 fun DetailsFragment.handleCrewData(crewData : ArrayList<Crew>){
-    val directoryName = crewData.find { it.job == "Director" }?.crewName
+    val directoryName = crewData.find { it.job == "Director"|| it.job =="Screenplay" }?.crewName
     binding.tvDirectoryName.text = directoryName
-    binding.tvDirectoryType.text = getString(R.string.director)
+    val jobsDirector = crewData.filter { it.crewName.equals(directoryName)}
+    val jobListOfDirectors = arrayListOf<String>()
+    for (item in jobsDirector){
+        item.job?.let { jobListOfDirectors.add(it) }
+    }
+    binding.tvDirectoryType.text = jobListOfDirectors.joinToString(", ")
 
-    val writerName = crewData.find { it.job == "Writer" }?.crewName
+    val writerName = crewData.find { it.job == "Writer" || it.job == "Novel" ||it.job =="Story"  }?.crewName
     binding.tvWriterName.text = writerName
-    binding.tvWriterType.text = getString(R.string.writer)
+    val jobsWriter = crewData.filter { it.crewName.equals(writerName)}
+    val jobListOfWriters = arrayListOf<String>()
+    for (item in jobsWriter){
+        item.job?.let { jobListOfWriters.add(it) }
+    }
+    binding.tvWriterType.text = jobListOfWriters.joinToString(", ")
+
+    if (directoryName.equals(writerName)){
+        binding.tvWriterName.visibility=View.INVISIBLE
+        binding.tvWriterType.visibility=View.INVISIBLE
+    }
 }
 
 
@@ -38,27 +54,20 @@ fun DetailsFragment.handleDataStatus() = object:HandleDataStatus{
 }
 
 
-fun DetailsFragment.fullScreenFragment(){
+fun DetailsFragment.handleFullScreenFragment(imgPath: String, movieID: Int){
     binding.detailsImg.setOnClickListener {
-        zoomOut = if (zoomOut) {
-            binding.detailsImg.setLayoutParams(
-                LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.WRAP_CONTENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT
-                )
-            )
-            binding.detailsImg.adjustViewBounds = true
-            false
-        } else {
-            binding.detailsImg.setLayoutParams(
-                LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    LinearLayout.LayoutParams.MATCH_PARENT
-                )
-            )
-            binding.detailsImg.scaleType = ImageView.ScaleType.FIT_XY
-            true
-        }
+        val action = DetailsFragmentDirections.actionDetailsFragmentToFullScreenFragment(imgPath,movieID)
+        it.findNavController().navigate(action)
     }
 
+}
+
+fun DetailsFragment.hideImageWhenCollapse(){
+    binding.appBarLayout.addOnOffsetChangedListener(OnOffsetChangedListener { appBarLayout, verticalOffset ->
+        if (abs(verticalOffset) == appBarLayout.totalScrollRange) {
+            binding.detailsImg.visibility = View.INVISIBLE
+        }else if(verticalOffset == 0){
+            binding.detailsImg.visibility = View.VISIBLE
+        }
+    })
 }

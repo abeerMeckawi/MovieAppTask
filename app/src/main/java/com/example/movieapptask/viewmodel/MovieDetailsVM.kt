@@ -27,7 +27,7 @@ class MovieDetailsVM : ViewModel() {
                         val videoData = response.body()!!.videos?.results
 
                         if (videoData != null && videoData.count() > 0)
-                            video.postValue(videoData.get(0))
+                            video.postValue(videoData[0])
 
                         dataStatus.postValue(DataStatus.SUCCESS)
                     }
